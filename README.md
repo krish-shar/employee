@@ -1,27 +1,23 @@
 <div align="center">
 
-# Suna - Open Source Generalist AI Agent
+# VALE - Generalist AI Agent
 
 (that acts on your behalf)
 
-![Suna Screenshot](frontend/public/banner.png)
+![VALE Screenshot](frontend/public/banner.png)
 
-Suna is a fully open source AI assistant that helps you accomplish real-world tasks with ease. Through natural conversation, Suna becomes your digital companion for research, data analysis, and everyday challenges—combining powerful capabilities with an intuitive interface that understands what you need and delivers results.
+Vale is an AI assistant that helps you accomplish real-world tasks with ease. Through natural conversation, Vale becomes your digital companion for research, data analysis, and everyday challenges—combining powerful capabilities with an intuitive interface that understands what you need and delivers results.
 
-Suna's powerful toolkit includes seamless browser automation to navigate the web and extract data, file management for document creation and editing, web crawling and extended search capabilities, command-line execution for system tasks, website deployment, and integration with various APIs and services. These capabilities work together harmoniously, allowing Suna to solve your complex problems and automate workflows through simple conversations!
+Vale's powerful toolkit includes seamless browser automation to navigate the web and extract data, file management for document creation and editing, web crawling and extended search capabilities, command-line execution for system tasks, website deployment, and integration with various APIs and services. These capabilities work together harmoniously, allowing Vale to solve your complex problems and automate workflows through simple conversations!
 
-[![License](https://img.shields.io/badge/License-Apache--2.0-blue)](./license)
 [![Discord Follow](https://dcbadge.limes.pink/api/server/Py6pCBUUPw?style=flat)](https://discord.gg/Py6pCBUUPw)
 [![Twitter Follow](https://img.shields.io/twitter/follow/kortixai)](https://x.com/kortixai)
-[![GitHub Repo stars](https://img.shields.io/github/stars/kortix-ai/suna)](https://github.com/kortix-ai/suna)
-[![Issues](https://img.shields.io/github/issues/kortix-ai/suna
-)](https://github.com/kortix-ai/suna/labels/bug)
 </div>
 
 
 ## Table of Contents
 
-- [Suna Architecture](#project-architecture)
+- [VALE Architecture](#project-architecture)
   - [Backend API](#backend-api)
   - [Frontend](#frontend)
   - [Agent Docker](#agent-docker)
@@ -31,13 +27,12 @@ Suna's powerful toolkit includes seamless browser automation to navigate the web
   - [Prerequisites](#prerequisites)
   - [Installation Steps](#installation-steps)
 - [Acknowledgements](#acknowledgements)
-- [License](#license)
 
 ## Project Architecture
 
 ![Architecture Diagram](docs/images/diagram.png)
 
-Suna consists of four main components:
+Vale consists of four main components:
 
 ### Backend API
 Python/FastAPI service that handles REST endpoints, thread management, and LLM integration with Anthropic, and others via LiteLLM.
@@ -79,7 +74,7 @@ Handles data persistence with authentication, user management, conversation hist
 
 ## Run Locally / Self-Hosting
 
-Suna can be self-hosted on your own infrastructure. Follow these steps to set up your own instance.
+Vale can be self-hosted on your own infrastructure. Follow these steps to set up your own instance.
 
 ### Requirements
 
@@ -137,13 +132,7 @@ You'll need the following components:
 
 ### Installation Steps
 
-1. **Clone the repository**:
-```bash
-git clone https://github.com/kortix-ai/suna.git
-cd suna
-```
-
-2. **Configure backend environment**:
+1. **Configure backend environment**:
 ```bash
 cd backend
 cp .env.example .env  # Create from example if available, or use the following template
@@ -181,7 +170,7 @@ FIRECRAWL_API_KEY=your_firecrawl_api_key  # For web scraping capabilities
 RAPID_API_KEY=
 ```
 
-3. **Set up Supabase database**:
+2. **Set up Supabase database**:
 ```bash
 # Login to Supabase CLI
 supabase login
@@ -195,7 +184,7 @@ supabase db push
 
 Then, go to the Supabase web platform again -> choose your project -> Project Settings -> Data API -> And in the "Exposed Schema" add "basejump" if not already there
 
-4. **Configure frontend environment**:
+3. **Configure frontend environment**:
 ```bash
 cd ../frontend
 cp .env.example .env.local  # Create from example if available, or use the following template
@@ -205,16 +194,11 @@ cp .env.example .env.local  # Create from example if available, or use the follo
 ```
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_BACKEND_URL="http://localhost:8000/api"  # Use this for local development
+NEXT_PUBLIC_BACKEND_URL="http://backend:8000/api"  # Use this when running with Docker Compose
 NEXT_PUBLIC_URL="http://localhost:3000"
 ```
 
-   Note: If you're using Docker Compose, use the container name instead of localhost:
-```
-NEXT_PUBLIC_BACKEND_URL="http://backend:8000/api"  # Use this when running with Docker Compose
-```
-
-5. **Install dependencies**:
+4. **Install dependencies**:
 ```bash
 # Install frontend dependencies
 cd frontend
@@ -225,7 +209,7 @@ cd ../backend
 pip install -r requirements.txt
 ```
 
-6. **Start the application**:
+5. **Start the application**:
 
    In one terminal, start the frontend:
 ```bash
@@ -238,20 +222,6 @@ npm run dev
 cd backend
 python api.py
 ```
-
-5-6. **Docker Compose Alternative**:
-
-Before running with Docker Compose, make sure your environment files are properly configured:
-- In `backend/.env`, set all the required environment variables as described above
-  - For Redis configuration, use `REDIS_HOST=redis` instead of localhost
-  - The Docker Compose setup will automatically set these Redis environment variables:
-    ```
-    REDIS_HOST=redis
-    REDIS_PORT=6379
-    REDIS_PASSWORD=
-    REDIS_SSL=False
-    ```
-- In `frontend/.env.local`, make sure to set `NEXT_PUBLIC_BACKEND_URL="http://backend:8000/api"` to use the container name
 
 Then run:
 ```bash
@@ -267,10 +237,10 @@ docker compose up
 The Docker Compose setup includes a Redis service that will be used by the backend automatically.
 
 
-7. **Access Suna**:
+6. **Access Vale**:
    - Open your browser and navigate to `http://localhost:3000`
    - Sign up for an account using the Supabase authentication
-   - Start using your self-hosted Suna instance!
+   - Start using your self-hosted Vale instance!
 
 ## Acknowledgements
 
@@ -288,9 +258,4 @@ The Docker Compose setup includes a Redis service that will be used by the backe
 - [Tavily](https://tavily.com/) - Search capabilities
 - [Firecrawl](https://firecrawl.dev/) - Web scraping capabilities
 - [RapidAPI](https://rapidapi.com/) - API services
-
-
-## License
-
-Kortix Suna is licensed under the Apache License, Version 2.0. See [LICENSE](./LICENSE) for the full license text.
 

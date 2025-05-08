@@ -93,7 +93,10 @@ export function SidebarLeft({
       <SidebarHeader className="px-2 py-2">
         <div className="flex h-[40px] items-center px-1 relative">
           <Link href="/dashboard">
-            <KortixLogo />
+            {/* <KortixLogo /> */}
+            <div className="text-2xl font-bold bg-accent/20 rounded-lg p-1.5">
+              V
+            </div>
           </Link>
           {state !== 'collapsed' && (
             <div className="ml-2 transition-all duration-200 ease-in-out whitespace-nowrap">
@@ -130,7 +133,7 @@ export function SidebarLeft({
       </SidebarContent>
       {state !== 'collapsed' && (
         <div className="px-3 py-2">
-          <CTACard />
+          {/* <CTACard /> */}
         </div>
       )}
       <SidebarFooter>

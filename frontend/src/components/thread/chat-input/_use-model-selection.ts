@@ -4,7 +4,7 @@ import { useSubscription } from '@/hooks/react-query/subscriptions/use-subscript
 import { useState, useEffect } from 'react';
 
 export const STORAGE_KEY_MODEL = 'suna-preferred-model';
-export const DEFAULT_FREE_MODEL_ID = 'gpt-4o';
+export const DEFAULT_FREE_MODEL_ID = 'gpt-4.1-mini';
 export const DEFAULT_PREMIUM_MODEL_ID = 'sonnet-3.7';
 
 export type SubscriptionStatus = 'no_subscription' | 'active';
@@ -18,17 +18,29 @@ export interface ModelOption {
 
 export const MODEL_OPTIONS: ModelOption[] = [
   { 
-    id: 'gpt-4o', 
-    label: 'Free', 
+    id: 'gpt-4.1-mini', 
+    label: 'GPT-4.1-Mini', 
     requiresSubscription: false,
     description: 'Limited capabilities. Upgrade for full performance.'
   },
   { 
     id: 'sonnet-3.7', 
-    label: 'Standard', 
+    label: 'Claude 3.7 Sonnet', 
     requiresSubscription: false, 
     description: 'Excellent for complex tasks and nuanced conversations'
   },
+  {
+    id: 'gpt-4o-mini',
+    label: 'GPT-4o-Mini',
+    requiresSubscription: false,
+    // description: 'Excellent for complex tasks and nuanced conversations'
+  },
+  {
+    id: 'gpt-4o',
+    label: 'GPT-4o',
+    requiresSubscription: false,
+    // description: 'Excellent for complex tasks and nuanced conversations'
+  }
 ];
 
 export const canAccessModel = (

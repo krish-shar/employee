@@ -35,6 +35,7 @@ MODEL_NAME_ALIASES = {
     # Short names to full names
     "sonnet-3.7": "anthropic/claude-3-7-sonnet-latest",
     "gpt-4.1": "openai/gpt-4.1-2025-04-14",
+    "gpt-4.1-mini": "openai/gpt-4.1-mini",
     "gpt-4o": "openai/gpt-4o",
     "gpt-4-turbo": "openai/gpt-4-turbo",
     "gpt-4": "openai/gpt-4",

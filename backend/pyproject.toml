@@ -4,13 +4,12 @@ version = "1.0"
 description = "open source generalist AI Agent"
 authors = ["marko-kraemer <mail@markokraemer.com>"]
 readme = "README.md"
-license = "MIT"
+license = "Proprietary"
 homepage = "https://www.suna.so/"
 repository = "https://github.com/kortix-ai/suna"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Libraries :: Python Modules",

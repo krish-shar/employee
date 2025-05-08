@@ -1,0 +1,59 @@
+Healthcare Regulatory Scan
+“Research the UK’s healthcare data privacy landscape. Identify key regulations (e.g., GDPR, NHS guidelines), list compliance requirements, estimated timelines, and resource needs. Compile everything into a PDF summary.”
+
+Corporate Debt Market Overview
+“Analyze the corporate bond market in Europe. List the top issuers by volume, their outstanding debt, credit ratings, strengths, and weaknesses. Include issuer websites and generate an Excel report.”
+
+Talent Sourcing – DevOps Engineers
+“Search LinkedIn for 10 DevOps engineers in Toronto with AWS certifications, at least 2 years’ experience, and currently open to opportunities. Provide profile URLs and contact emails where available.”
+
+Global Conference Roadmap
+“Create a 5-day itinerary for a delegation attending the Mobile World Congress in Barcelona (Feb 24–28, 2025). Include session schedules, networking events, and nearby dining options based on local weather forecasts.”
+
+Market Entry Spreadsheet
+“Build a spreadsheet detailing the top five wearable-tech products in North America: manufacturer, retail price, key features, market share, and website URLs. Include sources for all data.”
+
+Speaker Discovery – Climate Tech
+“Find 15 speakers in Europe who’ve presented on climate-tech at major conferences in the last 18 months. Scrape talk titles, abstracts, LinkedIn profiles, and contact emails. Output as a CSV.”
+
+Academic Review – AI in Medicine
+“Summarize and compare peer-reviewed papers from the last five years on AI-driven diagnostics. Highlight methodologies, datasets, performance metrics, and cite DOIs. Deliver the analysis as a PDF.”
+
+Lead Generation – Manufacturing CRM
+“Identify 20 mid-sized manufacturing firms in Germany. Gather their website URLs, decision-maker emails, and LinkedIn company pages. Draft a personalized outreach email for offering process-optimization consulting.”
+
+SEO Health Check
+“Audit my site (examplehealth.ai) for on-page SEO: list missing meta tags, page speed issues, and mobile usability errors. Provide actionable recommendations in a Word document.”
+
+Custom Travel Plan – Family Vacation
+“Plan a 7-day family trip to Vancouver from New York starting June 15, 2025. Book a waterfront Airbnb with a 4.5+ rating, suggest daily outdoor activities based on the 10-day forecast, and include transit logistics.”
+
+Series B Startup Tracker
+“Use Dealroom and Crunchbase to list all Series B-funded SaaS startups in FinTech since January 2024. Include funding amounts, lead investors, founder names, and website URLs. Export to Google Sheets.”
+
+Community Sentiment Analysis
+“Scrape recent Reddit and Twitter discussions about ‘telehealth’ in the UK. Analyze sentiment (positive/negative themes) and list the top 5 praises and criticisms. Present findings in a PDF report.”
+
+Competitor Analysis (Watch) - "Analyze the market for my next company in the healthcare industry, located in the UK. Give me the major players, their market size, strengths, and weaknesses, and add their website URLs. Once done, generate a PDF report."
+
+VC List (Watch) - "Give me the list of the most important VC Funds in the United States based on Assets Under Management. Give me website URLs, and if possible an email to reach them out."
+
+Looking for Candidates (Watch) - "Go on LinkedIn, and find me 10 profiles available - they are not working right now - for a junior software engineer position, who are located in Munich, Germany. They should have at least one bachelor's degree in Computer Science or anything related to it, and 1-year of experience in any field/role."
+
+Planning Company Trip (Watch) - "Generate me a route plan for my company. We should go to California. We'll be in 8 people. Compose the trip from the departure (Paris, France) to the activities we can do considering that the trip will be 7 days long - departure on the 21st of Apr 2025. Check the weather forecast and temperature for the upcoming days, and based on that, you can plan our activities (outdoor vs indoor)."
+
+Working on Excel (Watch) - "My company asked me to set up an Excel spreadsheet with all the information about Italian lottery games (Lotto, 10eLotto, and Million Day). Based on that, generate and send me a spreadsheet with all the basic information (public ones)."
+
+Automate Event Speaker Prospecting (Watch) - "Find 20 AI ethics speakers from Europe who've spoken at conferences in the past year. Scrapes conference sites, cross-references LinkedIn and YouTube, and outputs contact info + talk summaries."
+
+Summarize and Cross-Reference Scientific Papers (Watch) - "Research and compare scientific papers talking about Alcohol effects on our bodies during the last 5 years. Generate a report about the most important scientific papers talking about the topic I wrote before."
+
+Research + First Contact Draft (Watch) - "Research my potential customers (B2B) on LinkedIn. They should be in the clean tech industry. Find their websites and their email addresses. After that, based on the company profile, generate a personalized first contact email where I present my company which is offering consulting services to cleantech companies to maximize their profits and reduce their costs."
+
+SEO Analysis (Watch) - "Based on my website suna.so, generate an SEO report analysis, find top-ranking pages by keyword clusters, and identify topics I'm missing."
+
+Generate a Personal Trip (Watch) - "Generate a personal trip to London, with departure from Bangkok on the 1st of May. The trip will last 10 days. Find an accommodation in the center of London, with a rating on Google reviews of at least 4.5. Find me interesting outdoor activities to do during the journey. Generate a detailed itinerary plan."
+
+Recently Funded Startups (Watch) - "Go on Crunchbase, Dealroom, and TechCrunch, filter by Series A funding rounds in the SaaS Finance Space, and build a report with company data, founders, and contact info for outbound sales."
+
+Scrape Forum Discussions (Watch) - "I need to find the best beauty centers in Rome, but I want to find them by using open forums that speak about this topic. Go on Google, and scrape the forums by looking for beauty center discussions located in Rome. Then generate a list of 5 beauty centers with the best comments about them."

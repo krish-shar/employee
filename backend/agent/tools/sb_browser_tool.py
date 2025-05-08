@@ -143,45 +143,45 @@ class SandboxBrowserTool(SandboxToolsBase):
         """
         return await self._execute_browser_action("navigate_to", {"url": url})
 
-    # @openapi_schema({
-    #     "type": "function",
-    #     "function": {
-    #         "name": "browser_search_google",
-    #         "description": "Search Google with the provided query",
-    #         "parameters": {
-    #             "type": "object",
-    #             "properties": {
-    #                 "query": {
-    #                     "type": "string",
-    #                     "description": "The search query to use"
-    #                 }
-    #             },
-    #             "required": ["query"]
-    #         }
-    #     }
-    # })
-    # @xml_schema(
-    #     tag_name="browser-search-google",
-    #     mappings=[
-    #         {"param_name": "query", "node_type": "content", "path": "."}
-    #     ],
-    #     example='''
-    #     <browser-search-google>
-    #     artificial intelligence news
-    #     </browser-search-google>
-    #     '''
-    # )
-    # async def browser_search_google(self, query: str) -> ToolResult:
-    #     """Search Google with the provided query
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "browser_search_google",
+            "description": "Search Google with the provided query",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The search query to use"
+                    }
+                },
+                "required": ["query"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="browser-search-google",
+        mappings=[
+            {"param_name": "query", "node_type": "content", "path": "."}
+        ],
+        example='''
+        <browser-search-google>
+        artificial intelligence news
+        </browser-search-google>
+        '''
+    )
+    async def browser_search_google(self, query: str) -> ToolResult:
+        """Search Google with the provided query
         
-    #     Args:
-    #         query (str): The search query to use
+        Args:
+            query (str): The search query to use
             
-    #     Returns:
-    #         dict: Result of the execution
-    #     """
-    #     logger.debug(f"\033[95mSearching Google for: {query}\033[0m")
-    #     return await self._execute_browser_action("search_google", {"query": query})
+        Returns:
+            dict: Result of the execution
+        """
+        logger.debug(f"\033[95mSearching Google for: {query}\033[0m")
+        return await self._execute_browser_action("search_google", {"query": query})
 
     @openapi_schema({
         "type": "function",
@@ -415,45 +415,45 @@ class SandboxBrowserTool(SandboxToolsBase):
         logger.debug(f"\033[95mSwitching to tab: {page_id}\033[0m")
         return await self._execute_browser_action("switch_tab", {"page_id": page_id})
 
-    # @openapi_schema({
-    #     "type": "function",
-    #     "function": {
-    #         "name": "browser_open_tab",
-    #         "description": "Open a new browser tab with the specified URL",
-    #         "parameters": {
-    #             "type": "object",
-    #             "properties": {
-    #                 "url": {
-    #                     "type": "string",
-    #                     "description": "The URL to open in the new tab"
-    #                 }
-    #             },
-    #             "required": ["url"]
-    #         }
-    #     }
-    # })
-    # @xml_schema(
-    #     tag_name="browser-open-tab",
-    #     mappings=[
-    #         {"param_name": "url", "node_type": "content", "path": "."}
-    #     ],
-    #     example='''
-    #     <browser-open-tab>
-    #     https://example.com
-    #     </browser-open-tab>
-    #     '''
-    # )
-    # async def browser_open_tab(self, url: str) -> ToolResult:
-    #     """Open a new browser tab with the specified URL
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "browser_open_tab",
+            "description": "Open a new browser tab with the specified URL",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "description": "The URL to open in the new tab"
+                    }
+                },
+                "required": ["url"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="browser-open-tab",
+        mappings=[
+            {"param_name": "url", "node_type": "content", "path": "."}
+        ],
+        example='''
+        <browser-open-tab>
+        https://example.com
+        </browser-open-tab>
+        '''
+    )
+    async def browser_open_tab(self, url: str) -> ToolResult:
+        """Open a new browser tab with the specified URL
         
-    #     Args:
-    #         url (str): The URL to open in the new tab
+        Args:
+            url (str): The URL to open in the new tab
             
-    #     Returns:
-    #         dict: Result of the execution
-    #     """
-    #     logger.debug(f"\033[95mOpening new tab with URL: {url}\033[0m")
-    #     return await self._execute_browser_action("open_tab", {"url": url})
+        Returns:
+            dict: Result of the execution
+        """
+        logger.debug(f"\033[95mOpening new tab with URL: {url}\033[0m")
+        return await self._execute_browser_action("open_tab", {"url": url})
 
     @openapi_schema({
         "type": "function",
@@ -495,64 +495,64 @@ class SandboxBrowserTool(SandboxToolsBase):
         logger.debug(f"\033[95mClosing tab: {page_id}\033[0m")
         return await self._execute_browser_action("close_tab", {"page_id": page_id})
 
-    # @openapi_schema({
-    #     "type": "function",
-    #     "function": {
-    #         "name": "browser_extract_content",
-    #         "description": "Extract content from the current page based on the provided goal",
-    #         "parameters": {
-    #             "type": "object",
-    #             "properties": {
-    #                 "goal": {
-    #                     "type": "string",
-    #                     "description": "The extraction goal (e.g., 'extract all links', 'find product information')"
-    #                 }
-    #             },
-    #             "required": ["goal"]
-    #         }
-    #     }
-    # })
-    # @xml_schema(
-    #     tag_name="browser-extract-content",
-    #     mappings=[
-    #         {"param_name": "goal", "node_type": "content", "path": "."}
-    #     ],
-    #     example='''
-    #     <browser-extract-content>
-    #     Extract all links on the page
-    #     </browser-extract-content>
-    #     '''
-    # )
-    # async def browser_extract_content(self, goal: str) -> ToolResult:
-    #     """Extract content from the current page based on the provided goal
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "browser_extract_content",
+            "description": "Extract content from the current page based on the provided goal",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "goal": {
+                        "type": "string",
+                        "description": "The extraction goal (e.g., 'extract all links', 'find product information')"
+                    }
+                },
+                "required": ["goal"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="browser-extract-content",
+        mappings=[
+            {"param_name": "goal", "node_type": "content", "path": "."}
+        ],
+        example='''
+        <browser-extract-content>
+        Extract all links on the page
+        </browser-extract-content>
+        '''
+    )
+    async def browser_extract_content(self, goal: str) -> ToolResult:
+        """Extract content from the current page based on the provided goal
         
-    #     Args:
-    #         goal (str): The extraction goal
+        Args:
+            goal (str): The extraction goal
             
-    #     Returns:
-    #         dict: Result of the execution
-    #     """
-    #     logger.debug(f"\033[95mExtracting content with goal: {goal}\033[0m")
-    #     result = await self._execute_browser_action("extract_content", {"goal": goal})
+        Returns:
+            dict: Result of the execution
+        """
+        logger.debug(f"\033[95mExtracting content with goal: {goal}\033[0m")
+        result = await self._execute_browser_action("extract_content", {"goal": goal})
         
-    #     # Format content for better readability
-    #     if result.get("success"):
-    #         logger.debug(f"\033[92mContent extraction successful\033[0m")
-    #         content = result.data.get("content", "")
-    #         url = result.data.get("url", "")
-    #         title = result.data.get("title", "")
+        # Format content for better readability
+        if result.get("success"):
+            logger.debug(f"\033[92mContent extraction successful\033[0m")
+            content = result.data.get("content", "")
+            url = result.data.get("url", "")
+            title = result.data.get("title", "")
             
-    #         if content:
-    #             content_preview = content[:200] + "..." if len(content) > 200 else content
-    #             logger.debug(f"\033[95mExtracted content from {title} ({url}):\033[0m")
-    #             logger.debug(f"\033[96m{content_preview}\033[0m")
-    #             logger.debug(f"\033[95mTotal content length: {len(content)} characters\033[0m")
-    #         else:
-    #             logger.debug(f"\033[93mNo content extracted from {url}\033[0m")
-    #     else:
-    #         logger.debug(f"\033[91mFailed to extract content: {result.data.get('error', 'Unknown error')}\033[0m")
+            if content:
+                content_preview = content[:200] + "..." if len(content) > 200 else content
+                logger.debug(f"\033[95mExtracted content from {title} ({url}):\033[0m")
+                logger.debug(f"\033[96m{content_preview}\033[0m")
+                logger.debug(f"\033[95mTotal content length: {len(content)} characters\033[0m")
+            else:
+                logger.debug(f"\033[93mNo content extracted from {url}\033[0m")
+        else:
+            logger.debug(f"\033[91mFailed to extract content: {result.data.get('error', 'Unknown error')}\033[0m")
         
-    #     return result
+        return result
 
     @openapi_schema({
         "type": "function",

@@ -1191,7 +1191,7 @@ export default function ThreadPage({
       if (metaDescription) {
         metaDescription.setAttribute(
           'content',
-          `${projectName} - Public AI conversation shared from Kortix Suna`,
+          `${projectName} - Public AI conversation shared from Vale`,
         );
       }
 

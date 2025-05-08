@@ -205,6 +205,93 @@ class SandboxShellTool(SandboxToolsBase):
                 
         except Exception as e:
             return self.fail_response(f"Error executing command: {str(e)}")
+        
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "execute_command_async",
+            "description": "Execute a shell command asynchronously in the workspace directory. This tool is useful for running long-running processes without blocking the main thread. Use this for tasks like file uploads, downloads, or other operations that might take a while to complete.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "command": {
+                        "type": "string",
+                        "description": "The shell command to execute. Use this for running CLI tools, installing packages, or system operations. Commands can be chained using &&, ||, and | operators. Example: 'find . -type f | sort && grep -r \"pattern\" . | awk \"{print $1}\" | sort | uniq -c'"
+                    },
+                    "folder": {
+                        "type": "string",
+                        "description": "Optional relative path to a subdirectory of /workspace where the command should be executed. Example: 'data/pdfs'"
+                    },
+                    "session_name": {
+                        "type": "string",
+                        "description": "Optional name of the session to use. Use named sessions for related commands that need to maintain state. Defaults to 'default'.",
+                        "default": "default"
+                    }
+                },
+                "required": ["command"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="execute-command-async",
+        mappings=[
+            {"param_name": "command", "node_type": "content", "path": "."},
+            {"param_name": "folder", "node_type": "attribute", "path": ".", "required": False},
+            {"param_name": "session_name", "node_type": "attribute", "path": ".", "required": False}
+        ],
+        example='''
+        <!-- Example 1: Basic Command Execution -->
+        <execute-command-async>
+        npm run build
+        </execute-command-async>
+
+        <!-- Example 2: Running in Specific Directory -->
+        <execute-command-async folder="src">
+        npm install
+        </execute-command-async>
+        '''
+    )
+    async def execute_command_async(
+        self, 
+        command: str, 
+        folder: Optional[str] = None,
+        session_name: str = "default"
+    ) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+            
+            # Ensure session exists
+            session_id = await self._ensure_session(session_name)
+            
+            # Set up working directory
+            cwd = self.workspace_path
+            if folder:
+                folder = folder.strip('/')
+                cwd = f"{self.workspace_path}/{folder}"
+            
+            # Execute command in session
+            from sandbox.sandbox import SessionExecuteRequest
+            req = SessionExecuteRequest(
+                command=command,
+                var_async=True,  # This makes the command asynchronous
+                cwd=cwd  # Still set the working directory for reference
+            )
+            
+            response = self.sandbox.process.execute_session_command(
+                session_id=session_id,
+                req=req,
+                timeout=None  # No timeout for async commands
+            )
+            
+            return self.success_response({
+                "command_id": response.cmd_id,
+                "cwd": cwd
+            })
+            
+        except Exception as e:
+            return self.fail_response(f"Error executing command: {str(e)}")
+    
 
     async def cleanup(self):
         """Clean up all sessions."""

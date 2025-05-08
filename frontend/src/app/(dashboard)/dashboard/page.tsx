@@ -211,7 +211,7 @@ function DashboardContent() {
             Hey
           </h1>
           <p className="tracking-tight text-3xl font-normal text-muted-foreground/80 mt-2 flex items-center gap-2">
-            What would you like Suna to do today?
+            What would you like Vale to do today?
           </p>
         </div>
 

@@ -152,78 +152,78 @@ Ask user a question and wait for response. Use for: 1) Requesting clarification 
         except Exception as e:
             return self.fail_response(f"Error requesting browser takeover: {str(e)}")
 
-#     @openapi_schema({
-#         "type": "function",
-#         "function": {
-#             "name": "inform",
-#             "description": "Inform the user about progress, completion of a major step, or important context. Use this tool: 1) To provide updates between major sections of work, 2) After accomplishing significant milestones, 3) When transitioning to a new phase of work, 4) To confirm actions were completed successfully, 5) To provide context about upcoming steps. IMPORTANT: Use FREQUENTLY throughout execution to provide UI context to the user. The user CANNOT respond to this tool - they can only respond to the 'ask' tool. Use this tool to keep the user informed without requiring their input.",
-#             "parameters": {
-#                 "type": "object",
-#                 "properties": {
-#                     "text": {
-#                         "type": "string",
-#                         "description": "Information to present to the user. Include: 1) Clear statement of what has been accomplished or what is happening, 2) Relevant context or impact, 3) Brief indication of next steps if applicable."
-#                     },
-#                     "attachments": {
-#                         "anyOf": [
-#                             {"type": "string"},
-#                             {"items": {"type": "string"}, "type": "array"}
-#                         ],
-#                         "description": "(Optional) List of files or URLs to attach to the information. Include when: 1) Information relates to specific files or resources, 2) Showing intermediate results or outputs, 3) Providing supporting documentation. Always use relative paths to /workspace directory."
-#                     }
-#                 },
-#                 "required": ["text"]
-#             }
-#         }
-#     })
-#     @xml_schema(
-#         tag_name="inform",
-#         mappings=[
-#             {"param_name": "text", "node_type": "content", "path": "."},
-#             {"param_name": "attachments", "node_type": "attribute", "path": ".", "required": False}
-#         ],
-#         example='''
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "inform",
+            "description": "Inform the user about progress, completion of a major step, or important context. Use this tool: 1) To provide updates between major sections of work, 2) After accomplishing significant milestones, 3) When transitioning to a new phase of work, 4) To confirm actions were completed successfully, 5) To provide context about upcoming steps. IMPORTANT: Use FREQUENTLY throughout execution to provide UI context to the user. The user CANNOT respond to this tool - they can only respond to the 'ask' tool. Use this tool to keep the user informed without requiring their input.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string",
+                        "description": "Information to present to the user. Include: 1) Clear statement of what has been accomplished or what is happening, 2) Relevant context or impact, 3) Brief indication of next steps if applicable."
+                    },
+                    "attachments": {
+                        "anyOf": [
+                            {"type": "string"},
+                            {"items": {"type": "string"}, "type": "array"}
+                        ],
+                        "description": "(Optional) List of files or URLs to attach to the information. Include when: 1) Information relates to specific files or resources, 2) Showing intermediate results or outputs, 3) Providing supporting documentation. Always use relative paths to /workspace directory."
+                    }
+                },
+                "required": ["text"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="inform",
+        mappings=[
+            {"param_name": "text", "node_type": "content", "path": "."},
+            {"param_name": "attachments", "node_type": "attribute", "path": ".", "required": False}
+        ],
+        example='''
 
-# Inform the user about progress, completion of a major step, or important context. Use this tool: 1) To provide updates between major sections of work, 2) After accomplishing significant milestones, 3) When transitioning to a new phase of work, 4) To confirm actions were completed successfully, 5) To provide context about upcoming steps. IMPORTANT: Use FREQUENTLY throughout execution to provide UI context to the user. The user CANNOT respond to this tool - they can only respond to the 'ask' tool. Use this tool to keep the user informed without requiring their input."
+Inform the user about progress, completion of a major step, or important context. Use this tool: 1) To provide updates between major sections of work, 2) After accomplishing significant milestones, 3) When transitioning to a new phase of work, 4) To confirm actions were completed successfully, 5) To provide context about upcoming steps. IMPORTANT: Use FREQUENTLY throughout execution to provide UI context to the user. The user CANNOT respond to this tool - they can only respond to the 'ask' tool. Use this tool to keep the user informed without requiring their input."
 
-#         <!-- Use inform FREQUENTLY to provide UI context and progress updates - THE USER CANNOT RESPOND to this tool -->
-#         <!-- The user can ONLY respond to the ask tool, not to inform -->
-#         <!-- Examples of when to use inform: -->
-#         <!-- 1. Completing major milestones -->
-#         <!-- 2. Transitioning between work phases -->
-#         <!-- 3. Confirming important actions -->
-#         <!-- 4. Providing context about upcoming steps -->
-#         <!-- 5. Sharing significant intermediate results -->
-#         <!-- 6. Providing regular UI updates throughout execution -->
+        <!-- Use inform FREQUENTLY to provide UI context and progress updates - THE USER CANNOT RESPOND to this tool -->
+        <!-- The user can ONLY respond to the ask tool, not to inform -->
+        <!-- Examples of when to use inform: -->
+        <!-- 1. Completing major milestones -->
+        <!-- 2. Transitioning between work phases -->
+        <!-- 3. Confirming important actions -->
+        <!-- 4. Providing context about upcoming steps -->
+        <!-- 5. Sharing significant intermediate results -->
+        <!-- 6. Providing regular UI updates throughout execution -->
 
-#         <inform attachments="analysis_results.csv,summary_chart.png">
-#             I've completed the data analysis of the sales figures. Key findings include:
-#             - Q4 sales were 28% higher than Q3
-#             - Product line A showed the strongest performance
-#             - Three regions missed their targets
+        <inform attachments="analysis_results.csv,summary_chart.png">
+            I've completed the data analysis of the sales figures. Key findings include:
+            - Q4 sales were 28% higher than Q3
+            - Product line A showed the strongest performance
+            - Three regions missed their targets
 
-#             I'll now proceed with creating the executive summary report based on these findings.
-#         </inform>
-#         '''
-#     )
-#     async def inform(self, text: str, attachments: Optional[Union[str, List[str]]] = None) -> ToolResult:
-#         """Inform the user about progress or important updates without requiring a response.
+            I'll now proceed with creating the executive summary report based on these findings.
+        </inform>
+        '''
+    )
+    async def inform(self, text: str, attachments: Optional[Union[str, List[str]]] = None) -> ToolResult:
+        """Inform the user about progress or important updates without requiring a response.
 
-#         Args:
-#             text: The information to present to the user
-#             attachments: Optional file paths or URLs to attach
+        Args:
+            text: The information to present to the user
+            attachments: Optional file paths or URLs to attach
 
-#         Returns:
-#             ToolResult indicating the information was successfully sent
-#         """
-#         try:
-#             # Convert single attachment to list for consistent handling
-#             if attachments and isinstance(attachments, str):
-#                 attachments = [attachments]
+        Returns:
+            ToolResult indicating the information was successfully sent
+        """
+        try:
+            # Convert single attachment to list for consistent handling
+            if attachments and isinstance(attachments, str):
+                attachments = [attachments]
 
-#             return self.success_response({"status": "Information sent"})
-#         except Exception as e:
-#             return self.fail_response(f"Error informing user: {str(e)}")
+            return self.success_response({"status": "Information sent"})
+        except Exception as e:
+            return self.fail_response(f"Error informing user: {str(e)}")
 
     @openapi_schema({
         "type": "function",

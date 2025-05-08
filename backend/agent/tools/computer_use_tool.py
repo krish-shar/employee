@@ -19,7 +19,12 @@ KEYBOARD_KEYS = [
     'up', 'down', 'left', 'right',
     'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12',
     'ctrl+c', 'ctrl+v', 'ctrl+x', 'ctrl+z', 'ctrl+a', 'ctrl+s',
-    'alt+tab', 'alt+f4', 'ctrl+alt+delete'
+    'alt+tab', 'alt+f4', 'ctrl+alt+delete', 'ctrl+shift+esc',
+    'ctrl+shift+t', 'ctrl+shift+n', 'ctrl+shift+o', 'ctrl+shift+p', 
+    'ctrl+shift+q', 'ctrl+shift+w', 'ctrl+shift+x', 'ctrl+shift+y', 
+    'ctrl+shift+z', 'ctrl+shift+0', 'ctrl+shift+1', 'ctrl+shift+2', 
+    'ctrl+shift+3', 'ctrl+shift+4', 'ctrl+shift+5', 'ctrl+shift+6',
+    'ctrl+shift+7', 'ctrl+shift+8', 'ctrl+shift+9', 
 ]
 
 class ComputerUseTool(SandboxToolsBase):

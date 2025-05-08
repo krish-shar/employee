@@ -118,7 +118,8 @@ def create_sandbox(password: str, project_id: str = None):
             "cpu": 2,
             "memory": 4,
             "disk": 5,
-        }
+        },
+        auto_stop_interval=100,
     )
     
     # Create the sandbox

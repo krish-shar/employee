@@ -327,7 +327,722 @@ class SandboxFilesTool(SandboxToolsBase):
             return self.success_response(f"File '{file_path}' deleted successfully.")
         except Exception as e:
             return self.fail_response(f"Error deleting file: {str(e)}")
+        
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "create_folder",
+            "description": "Create a new folder at the given path. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "folder_path": {
+                        "type": "string",
+                        "description": "Path to the folder to be created, relative to /workspace (e.g., 'src')"
+                    }
+                },
+                "required": ["folder_path"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="create-folder",
+        mappings=[
+            {"param_name": "folder_path", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <create-folder folder_path="src">
+        '''
+    )
+    async def create_folder(self, folder_path: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+            
+            folder_path = self.clean_path(folder_path)
+            full_path = f"{self.workspace_path}/{folder_path}"
+            if self._file_exists(full_path):
+                return self.fail_response(f"Folder '{folder_path}' already exists")
+            
+            self.sandbox.fs.create_folder(full_path)
+            return self.success_response(f"Folder '{folder_path}' created successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error creating folder: {str(e)}")
+    
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "delete_folder",
+            "description": "Delete a folder at the given path. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "folder_path": {
+                        "type": "string",
+                        "description": "Path to the folder to be deleted, relative to /workspace (e.g., 'src')"
+                    }
+                },
+                "required": ["folder_path"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="delete-folder",
+        mappings=[
+            {"param_name": "folder_path", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <delete-folder folder_path="src">
+        '''
+    )
+    async def delete_folder(self, folder_path: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
 
+            folder_path = self.clean_path(folder_path)
+            full_path = f"{self.workspace_path}/{folder_path}"
+            if not self._file_exists(full_path):
+                return self.fail_response(f"Folder '{folder_path}' does not exist")
+            
+            self.sandbox.fs.delete_folder(full_path)
+            return self.success_response(f"Folder '{folder_path}' deleted successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error deleting folder: {str(e)}")
+        
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "list_files",
+            "description": "List all files and folders in the given path. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the directory to list, relative to /workspace (e.g., 'src')"
+                    }
+                },
+                "required": ["path"]
+            }   
+        }
+    })
+    @xml_schema(
+        tag_name="list-files",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <list-files path="src">
+        '''
+    )
+    async def list_files(self, path: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+            
+            path = self.clean_path(path)
+            full_path = f"{self.workspace_path}/{path}"
+            if not self._file_exists(full_path):
+                return self.fail_response(f"Path '{path}' does not exist")
+            
+            files = self.sandbox.fs.list_files(full_path)
+            return self.success_response(f"Files in '{path}': {files}")
+        except Exception as e:
+            return self.fail_response(f"Error listing files: {str(e)}")
+        
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "clone_git_repo",
+            "description": "Clone a Git repository into the workspace. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "repo_url": {
+                        "type": "string",
+                        "description": "URL of the Git repository to clone"
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "Path to clone the repository to, relative to /workspace (e.g., 'src')"
+                    },
+                    "branch": {
+                        "type": "string",
+                        "description": "Branch to clone (default: main)",
+                        "default": "main"
+                    }
+                },
+                "required": ["repo_url", "path"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="clone-git-repo",
+        mappings=[
+            {"param_name": "repo_url", "node_type": "attribute", "path": "."},
+            {"param_name": "path", "node_type": "attribute", "path": "."},
+            {"param_name": "branch", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <clone-git-repo repo_url="https://github.com/user/repo.git">
+        <path>src</path>
+        <branch>main</branch>
+        </clone-git-repo>
+        '''
+    )
+    async def clone_git_repo(self, repo_url: str, path: str, branch: str = "main") -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+            
+            # Clone the repository
+            self.sandbox.git.clone_repository(repo_url, path, branch)
+            return self.success_response(f"Repository cloned successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error cloning repository: {str(e)}")
+    
+    # clone with auth
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "clone_git_repo_with_auth",
+            "description": "Clone a Git repository into the workspace with authentication. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "repo_url": {
+                        "type": "string",
+                        "description": "URL of the Git repository to clone"
+                    },
+                    "path": {
+                        "type": "string",
+                        "description": "Path to clone the repository to, relative to /workspace (e.g., 'src')"
+                    },
+                    "auth_token": {
+                        "type": "string",
+                        "description": "Authentication token for the repository"
+                    },
+                    "branch": {
+                        "type": "string",
+                        "description": "Branch to clone (default: main)",
+                        "default": "main"
+                    }
+                },
+                "required": ["repo_url", "path", "auth_token"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="clone-git-repo-with-auth",
+        mappings=[
+            {"param_name": "repo_url", "node_type": "attribute", "path": "."},
+            {"param_name": "path", "node_type": "attribute", "path": "."},
+            {"param_name": "auth_token", "node_type": "attribute", "path": "."},
+            {"param_name": "branch", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <clone-git-repo-with-auth repo_url="https://github.com/user/repo.git">
+        <path>src</path>
+        <auth_token>your_auth_token</auth_token>
+        <branch>main</branch>
+        </clone-git-repo-with-auth>
+        '''
+    )
+    async def clone_git_repo_with_auth(self, repo_url: str, path: str, auth_token: str, branch: str = "main") -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+            
+            # Clone the repository with authentication
+            self.sandbox.git.clone_repository(repo_url, path, auth_token, branch)
+            return self.success_response(f"Repository cloned successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error cloning repository: {str(e)}")
+        
+    # get repo status
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "get_repo_status",
+            "description": "Get the status of a Git repository. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the repository to get the status of, relative to /workspace (e.g., 'src')"
+                    }
+                },
+                "required": ["path"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="get-repo-status",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <get-repo-status path="src">
+        '''
+    )
+    async def get_repo_status(self, path: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+            
+            # Get the status of the repository
+            status = self.sandbox.git.get_repository_status(path)
+            return self.success_response(f"Repository status: {status}")
+        except Exception as e:
+            return self.fail_response(f"Error getting repository status: {str(e)}")
+    
+    # add file to repo
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "add_file_to_repo",
+            "description": "Add a file to a Git repository. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the repository to add the file to, relative to /workspace (e.g., 'src')"
+                    },
+                    "file_path": {
+                        "type": "string",
+                        "description": "Path to the file to add, relative to /workspace (e.g., 'src/main.py' for /workspace/src/main.py)"
+                    }
+                },
+                "required": ["path", "file_path"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="add-file-to-repo",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."},
+            {"param_name": "file_path", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <add-file-to-repo path="src">
+        <file_path>src/main.py</file_path>
+        </add-file-to-repo>
+        '''
+    )
+    async def add_file_to_repo(self, path: str, file_path: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+            
+            # Add the file to the repository
+            self.sandbox.git.add_file(path, file_path)
+            return self.success_response(f"File added to repository successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error adding file to repository: {str(e)}")
+        
+    # create branch
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "create_branch",
+            "description": "Create a new branch in a Git repository. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the repository to create the branch in, relative to /workspace (e.g., 'src')"
+                    },
+                    "branch_name": {
+                        "type": "string",
+                        "description": "Name of the new branch to create"
+                    }
+                },
+                "required": ["path", "branch_name"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="create-branch",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."},
+            {"param_name": "branch_name", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <create-branch path="src">
+        <branch_name>new_branch</branch_name>
+        </create-branch>
+        '''
+    )
+    async def create_branch(self, path: str, branch_name: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+            
+            # Create the branch
+            self.sandbox.git.create_branch(path, branch_name)
+            return self.success_response(f"Branch '{branch_name}' created successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error creating branch: {str(e)}")
+        
+    # checkout branch
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "checkout_branch",
+            "description": "Checkout a branch in a Git repository. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the repository to checkout the branch in, relative to /workspace (e.g., 'src')"
+                    },
+                    "branch_name": {
+                        "type": "string",
+                        "description": "Name of the branch to checkout"
+                    }
+                },
+                "required": ["path", "branch_name"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="checkout-branch",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."},
+            {"param_name": "branch_name", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <checkout-branch path="src">
+        <branch_name>new_branch</branch_name>
+        </checkout-branch>
+        '''
+    )
+    async def checkout_branch(self, path: str, branch_name: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+
+            # Checkout the branch
+            self.sandbox.git.checkout_branch(path, branch_name)
+            return self.success_response(f"Branch '{branch_name}' checked out successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error checking out branch: {str(e)}")
+        
+    # commit
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "commit",
+            "description": "Commit changes to a Git repository. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the repository to commit in, relative to /workspace (e.g., 'src')"
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Commit message"
+                    }
+                },
+                "required": ["path", "message"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="commit",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."},
+            {"param_name": "message", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <commit path="src">
+        <message>Commit message</message>
+        </commit>
+        '''
+    )
+    async def commit(self, path: str, message: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+
+            # Commit the changes
+            self.sandbox.git.commit(path, message)
+            return self.success_response(f"Changes committed successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error committing changes: {str(e)}")
+        
+    # push
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "push",
+            "description": "Push changes to a Git repository. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the repository to push in, relative to /workspace (e.g., 'src')"
+                    },
+                    "branch_name": {
+                        "type": "string",
+                        "description": "Name of the branch to push"
+                    }
+                },
+                "required": ["path", "branch_name"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="push",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."},
+            {"param_name": "branch_name", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <push path="src">
+        <branch_name>main</branch_name>
+        </push>
+        '''
+    )
+    async def push(self, path: str, branch_name: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+
+            # Push the changes
+            self.sandbox.git.push(path, branch_name)
+            return self.success_response(f"Changes pushed successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error pushing changes: {str(e)}")
+        
+    # pull
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "pull",
+            "description": "Pull changes from a Git repository. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the repository to pull in, relative to /workspace (e.g., 'src')"
+                    },
+                    "branch_name": {
+                        "type": "string",
+                        "description": "Name of the branch to pull"
+                    }
+                },
+                "required": ["path", "branch_name"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="pull",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."},
+            {"param_name": "branch_name", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <pull path="src">
+        <branch_name>main</branch_name>
+        </pull>
+        '''
+    )
+    async def pull(self, path: str, branch_name: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+
+            # Pull the changes
+            self.sandbox.git.pull(path, branch_name)
+            return self.success_response(f"Changes pulled successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error pulling changes: {str(e)}")
+        
+    # merge
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "merge",
+            "description": "Merge a branch into the current branch. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the repository to merge in, relative to /workspace (e.g., 'src')"
+                    },
+                        "branch_name": {
+                        "type": "string",
+                        "description": "Name of the branch to merge"
+                    }
+                },
+                "required": ["path", "branch_name"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="merge",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."},
+            {"param_name": "branch_name", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <merge path="src">
+        <branch_name>main</branch_name>
+        </merge>
+        '''
+    )
+    async def merge(self, path: str, branch_name: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+
+            # Merge the branch
+            self.sandbox.git.merge(path, branch_name)
+            return self.success_response(f"Branch '{branch_name}' merged successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error merging branch: {str(e)}")
+        
+    # fetch
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "fetch",
+            "description": "Fetch changes from a Git repository. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the repository to fetch in, relative to /workspace (e.g., 'src')"
+                    }
+                },
+                "required": ["path"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="fetch",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <fetch path="src">
+        </fetch>
+        '''
+    )
+    async def fetch(self, path: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+
+            # Fetch the changes
+            self.sandbox.git.fetch(path)
+            return self.success_response(f"Changes fetched successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error fetching changes: {str(e)}")
+        
+    # add
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "add",
+            "description": "Add changes to a Git repository. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the repository to add in, relative to /workspace (e.g., 'src')"
+                    },
+                    "file_path": {
+                        "type": "string",
+                        "description": "Path to the file to add, relative to /workspace (e.g., 'src/main.py')"
+                    }
+                },
+                "required": ["path", "file_path"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="add",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."},
+            {"param_name": "file_path", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <add path="src">
+        <file_path>src/main.py</file_path>
+        </add>
+        '''
+    )
+    async def add(self, path: str, file_path: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+
+            # Add the file to the repository
+            self.sandbox.git.add(path, file_path)
+            return self.success_response(f"File added to repository successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error adding file to repository: {str(e)}")
+        
+    # checkout
+    @openapi_schema({
+        "type": "function",
+        "function": {
+            "name": "checkout",
+            "description": "Checkout a branch in a Git repository. The path must be relative to /workspace (e.g., 'src' for /workspace/src)",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Path to the repository to checkout in, relative to /workspace (e.g., 'src')"
+                    },
+                    "branch_name": {
+                        "type": "string",
+                        "description": "Name of the branch to checkout"
+                    }
+                },
+                "required": ["path", "branch_name"]
+            }
+        }
+    })
+    @xml_schema(
+        tag_name="checkout",
+        mappings=[
+            {"param_name": "path", "node_type": "attribute", "path": "."},
+            {"param_name": "branch_name", "node_type": "attribute", "path": "."}
+        ],
+        example='''
+        <checkout path="src">
+        <branch_name>main</branch_name>
+        </checkout>
+        '''
+    )
+    async def checkout(self, path: str, branch_name: str) -> ToolResult:
+        try:
+            # Ensure sandbox is initialized
+            await self._ensure_sandbox()
+
+            # Checkout the branch
+            self.sandbox.git.checkout(path, branch_name)
+            return self.success_response(f"Branch '{branch_name}' checked out successfully.")
+        except Exception as e:
+            return self.fail_response(f"Error checking out branch: {str(e)}")
+        
+    
     # @openapi_schema({
     #     "type": "function",
     #     "function": {
