@@ -1908,7 +1908,7 @@ export default function ThreadPage({
             value={newMessage}
             onChange={setNewMessage}
             onSubmit={handleSubmitMessage}
-            placeholder="Ask Suna anything..."
+            placeholder="Ask Vale anything..."
             loading={isSending}
             disabled={
               isSending ||

@@ -279,14 +279,14 @@ export function HeroSection() {
           </p> */}
 
           <Link
-            href={hero.githubUrl}
+            href={"/#integrations"}
             target="_blank"
             rel="noopener noreferrer"
             className="group border border-border/50 bg-background hover:bg-accent/20 hover:border-secondary/40 rounded-full text-sm h-8 px-3 flex items-center gap-2 transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105 hover:-translate-y-0.5"
           >
             {hero.badgeIcon}
             <span className="font-medium text-muted-foreground text-xs tracking-wide group-hover:text-primary transition-colors duration-300">
-              {hero.badge}
+              Integrations
             </span>
             <span className="inline-flex items-center justify-center size-3.5 rounded-full bg-muted/30 group-hover:bg-secondary/30 transition-colors duration-300">
               <svg

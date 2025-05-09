@@ -96,12 +96,12 @@ export const siteConfig = {
         />
       </svg>
     ),
-    badge: '100% OPEN SOURCE',
-    githubUrl: 'https://github.com/kortix-ai/suna',
-    title: 'Suna, the AI Employee.',
+    // badge: '100% OPEN SOURCE',
+    // githubUrl: 'https://github.com/kortix-ai/suna',
+    title: 'Vale, the AI Employee.',
     description:
-      'Suna by Kortix – is a generalist AI Agent that acts on your behalf.',
-    inputPlaceholder: 'Ask Suna to...',
+      'Vale – is a generalist AI Agent that acts on your behalf.',
+    inputPlaceholder: 'Ask Vale to...',
   },
   cloudPricingItems: [
     {

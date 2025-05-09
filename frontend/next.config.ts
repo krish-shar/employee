@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
 
     return config;
   },
+  images: {
+    domains: ['localhost', 'localhost:3000', '127.0.0.1', '127.0.0.1:3000', 'lh3.googleusercontent.com'],
+  },
 };
 
 export default nextConfig;

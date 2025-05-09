@@ -280,18 +280,18 @@ export function NavUserWithTeams({
 
               {/* User Settings Section */}
               <DropdownMenuGroup>
-                <DropdownMenuItem asChild>
-                  <Link href="/settings/billing">
+                {/* <DropdownMenuItem asChild> */}
+                  {/* <Link href="/settings/billing">
                     <CreditCard className="mr-2 h-4 w-4" />
                     Billing
-                  </Link>
-                </DropdownMenuItem>
-                {/* <DropdownMenuItem asChild>
+                  </Link> */}
+                {/* </DropdownMenuItem> */}
+                <DropdownMenuItem asChild>
                   <Link href="/settings">
                     <Settings className="mr-2 h-4 w-4" />
                     Settings
                   </Link>
-                </DropdownMenuItem> */}
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
                 >

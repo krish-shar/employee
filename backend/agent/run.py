@@ -70,6 +70,7 @@ async def run_agent(
     thread_manager.add_tool(MessageTool) # we are just doing this via prompt as there is no need to call it as a tool
     thread_manager.add_tool(WebSearchTool)
     thread_manager.add_tool(SandboxVisionTool, project_id=project_id, thread_id=thread_id, thread_manager=thread_manager)
+    
     # Add data providers tool if RapidAPI key is available
     if config.RAPID_API_KEY:
         thread_manager.add_tool(DataProvidersTool)
@@ -194,10 +195,10 @@ async def run_agent(
             system_prompt=system_message,
             stream=stream,
             llm_model=model_name,
-            llm_temperature=0,
+            llm_temperature=0.3,
             llm_max_tokens=max_tokens,
             tool_choice="auto",
-            max_xml_tool_calls=1,
+            max_xml_tool_calls=0,
             temporary_message=temporary_message,
             processor_config=ProcessorConfig(
                 xml_tool_calling=True,

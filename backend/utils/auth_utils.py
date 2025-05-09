@@ -222,3 +222,100 @@ async def get_optional_user_id(request: Request) -> Optional[str]:
         return user_id
     except PyJWTError:
         return None
+
+async def get_google_user_info_from_db(client, user_id: str):
+    """
+    Get the user's Google access and refresh tokens from the database.
+    For development: Assumes tokens are stored in plaintext in the '..._encrypted' columns.
+
+    Args:
+        client: The Supabase client.
+        user_id: The user ID to get the Google credentials for.
+
+    Returns:
+        dict: A dictionary containing 'access_token' and 'refresh_token',
+              or None if the integration is not found/connected or tokens are missing.
+    """
+    logger.info(f"Attempting to fetch Google integration info for user_id: {user_id}")
+
+    # Fetch only necessary columns and filter by provider and status
+    try:
+        response = await client.schema('public').from_('user_integrations').select(
+            'provider_access_token_encrypted, provider_refresh_token_encrypted'
+        ).eq(
+            'user_id', user_id
+        ).eq(
+            'provider', 'google'  # Ensure we are getting the Google integration
+        ).eq(
+            'status', 'connected' # Ensure the integration is active
+        ).execute()
+        logger.info(f"Database response for user_id {user_id} integrations: {response.data}")
+    except Exception as e:
+        logger.error(f"Database error fetching Google integration for user_id {user_id}: {e}")
+        raise # Re-raise the exception or handle as appropriate for your application
+
+    if response.data and len(response.data) > 0:
+        integration_data = response.data[0]
+        logger.info(f"Found Google integration data for user_id: {user_id}")
+        
+        access_token = integration_data.get('provider_access_token_encrypted')
+        refresh_token = integration_data.get('provider_refresh_token_encrypted')
+
+        if access_token:
+            logger.info(f"Access token found for user_id: {user_id}. Refresh token presence: {bool(refresh_token)}")
+            return {
+                "access_token": access_token,
+                "refresh_token": refresh_token
+            }
+        else:
+            logger.error(f"CRITICAL ISSUE: Google integration is 'connected' for user_id {user_id} but access token is MISSING in DB. Data: {integration_data}")
+            return None
+    
+    logger.info(f"No active/connected Google integration found for user_id: {user_id}")
+    return None
+
+async def verify_thread_access(client, thread_id: str, user_id: str):
+    """
+    Verify that a user has access to a specific thread based on account membership.
+    
+    Args:
+        client: The Supabase client
+        thread_id: The thread ID to check access for
+        user_id: The user ID to check permissions for
+        
+    Returns:
+        bool: True if the user has access
+        
+    Raises:
+        HTTPException: If the user doesn't have access to the thread
+    """
+    
+    # Query the thread to get account information
+    thread_result = await client.table('threads').select('*,project_id,account_id').eq('thread_id', thread_id).execute()
+    logger.info(f"thread_result: {thread_result}")
+
+    if not thread_result.data or len(thread_result.data) == 0:
+        if len(thread_result.data) == 0:
+            logger.info(f"Thread not found for thread_id: {thread_id} `len(thread_result.data) == 0`")
+            logger.info(f"thread_result: {thread_result}")
+        else:
+            logger.info(f"Thread not found for thread_id: {thread_id} `not thread_result.data`")
+        raise HTTPException(status_code=404, detail="Thread not found")
+    
+    thread_data = thread_result.data[0]
+    
+    # Check if project is public
+    project_id = thread_data.get('project_id')
+    if project_id:
+        project_result = await client.table('projects').select('is_public').eq('project_id', project_id).execute()
+        if project_result.data and len(project_result.data) > 0:
+            if project_result.data[0].get('is_public'):
+                return True
+        
+    account_id = thread_data.get('account_id')
+    # When using service role, we need to manually check account membership instead of using current_user_account_role
+    if account_id:
+        account_user_result = await client.schema('basejump').from_('account_user').select('account_role').eq('user_id', user_id).eq('account_id', account_id).execute()
+        if account_user_result.data and len(account_user_result.data) > 0:
+            return True
+    raise HTTPException(status_code=403, detail="Not authorized to access this thread")

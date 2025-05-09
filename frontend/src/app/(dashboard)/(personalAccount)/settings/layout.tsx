@@ -11,9 +11,10 @@ export default function PersonalAccountSettingsPage({
 }) {
   const pathname = usePathname();
   const items = [
-    // { name: "Profile", href: "/settings" },
+    { name: "Profile", href: "/settings" },
+    { name: "Integrations", href: "/settings/integrations" },
     // { name: "Teams", href: "/settings/teams" },
-    { name: 'Billing', href: '/settings/billing' },
+    // { name: 'Billing', href: '/settings/billing' },
   ];
   return (
     <div className="space-y-6 w-full">
